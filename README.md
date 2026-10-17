@@ -155,12 +155,20 @@ A few details:
     <a class="brand" href="/ko/">Stairno</a>
     <nav class="site-nav">
       <ul class="site-menu" data-menu>
-        <li><a href="#projects"><span data-dot-text …>프로젝트</span></a></li>
-        <li><a href="#news"><span data-dot-text …>소식</span></a></li>
-        <li><a href="#contact"><span data-dot-text …>연락</span></a></li>
+        <li>
+          <a href="#projects"><span data-dot-text …>프로젝트</span></a>
+        </li>
+        <li>
+          <a href="#news"><span data-dot-text …>소식</span></a>
+        </li>
+        <li>
+          <a href="#contact"><span data-dot-text …>연락</span></a>
+        </li>
       </ul>
       <a class="locale-switch" href="/en/" hreflang="en" lang="en" rel="alternate">English</a>
-      <button type="button" class="theme-toggle" data-theme-toggle aria-label="테마 전환" …>…</button>
+      <button type="button" class="theme-toggle" data-theme-toggle aria-label="테마 전환" …>
+        …
+      </button>
     </nav>
   </div>
 </header>
@@ -198,7 +206,9 @@ const copy = t(locale);
   switchLabel={copy.nav.switchLocale}
   themeLabels={copy.nav.theme}
 >
-  <a slot="actions" class="site-action" href={`/${locale}/sign-in/`}>{copy.nav.signIn}</a>
+  <a slot="actions" class="site-action" href={`/${locale}/sign-in/`}>
+    {copy.nav.signIn}
+  </a>
 </Header>
 ```
 
