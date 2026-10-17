@@ -1,0 +1,248 @@
+@import './tokens.css';
+
+/* Shared base for every Stairno site: reset, type, the container, the fixed
+   header, the locale switch, the footer and the pill button. Sections, hero
+   and motion belong to each site. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: 1.125rem;
+  line-height: 1.6;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+}
+
+a {
+  color: var(--link);
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--fg);
+  outline-offset: 3px;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+/* Header: fixed over the night sky, turns solid once the page scrolls. */
+
+.site-header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 10;
+  color: var(--on-night);
+  transition:
+    background-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.site-header.is-solid {
+  background: var(--night);
+  box-shadow: 0 1px 0 var(--on-night-faint);
+}
+
+.site-header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--header-height);
+}
+
+.brand {
+  color: var(--on-night);
+  font-weight: 800;
+  font-size: 1.25rem;
+  letter-spacing: -0.03em;
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.site-menu {
+  display: flex;
+  gap: 0.25rem;
+  margin: 0 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-menu a {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 0.875rem;
+  border-radius: 999px;
+  color: var(--on-night);
+  font-size: 1rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition:
+    padding 0.3s cubic-bezier(0.2, 0.7, 0.2, 1),
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.site-menu a:hover {
+  background: var(--on-night-faint);
+}
+
+.site-menu a[aria-current='true'] {
+  padding: 0 1.375rem;
+  color: var(--star);
+  font-size: 1.125rem;
+}
+
+@media (max-width: 720px) {
+  .site-menu {
+    display: none;
+  }
+}
+
+.locale-switch {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 0.875rem;
+  border-radius: 999px;
+  color: var(--on-night-muted);
+  font-size: 0.9375rem;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.locale-switch:hover {
+  color: var(--on-night);
+  background: var(--on-night-faint);
+}
+
+/* Footer closes the page in the night palette. */
+
+.site-footer {
+  background: var(--night);
+  color: var(--on-night-muted);
+  border-top: 1px solid var(--on-night-faint);
+  padding: 3rem 0 2.5rem;
+  font-size: 0.9375rem;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 2rem;
+}
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.footer-etymology {
+  color: var(--on-night-muted);
+}
+
+.footer-heading {
+  color: var(--on-night);
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.footer-links a {
+  color: var(--on-night-muted);
+  transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+  color: var(--star);
+}
+
+.footer-links .locale-switch {
+  padding-left: 0;
+  min-height: 0;
+}
+
+.footer-links .locale-switch:hover {
+  background: transparent;
+}
+
+@media (max-width: 720px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+}
+
+/* Pill button: white on the night palette. */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 1.5rem;
+  border-radius: 999px;
+  background: var(--star);
+  color: var(--night);
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .site-header,
+  .site-menu a,
+  .locale-switch {
+    transition: none;
+  }
+}

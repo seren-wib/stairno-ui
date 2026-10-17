@@ -1,0 +1,25 @@
+---
+import { alternateLocale, localePath, type Locale } from '../lib/i18n';
+
+interface Props {
+  /** The locale of the page the switch sits on. */
+  locale: Locale;
+  /** Path below the locale prefix, so the link lands on the same page. */
+  path?: string;
+  /** Visible text, in the language it switches to. */
+  label: string;
+}
+
+const { locale, path = '', label } = Astro.props;
+const target = alternateLocale(locale);
+---
+
+<a
+  class="locale-switch"
+  href={localePath(target, path)}
+  hreflang={target}
+  lang={target}
+  rel="alternate"
+>
+  {label}
+</a>

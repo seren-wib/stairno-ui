@@ -1,0 +1,23 @@
+---
+// Applies the theme before first paint. Put it in <head> before any stylesheet
+// and before the title, so the page never flashes the wrong theme. Same rule as
+// resolveTheme in ../lib/theme.ts; an inline script cannot import, so the rule
+// is repeated here in a few lines.
+---
+
+<script is:inline>
+  (function () {
+    var stored = null;
+    try {
+      stored = localStorage.getItem('theme');
+    } catch (e) {}
+    var theme =
+      stored === 'light' || stored === 'dark'
+        ? stored
+        : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'dark'
+          : 'light';
+    document.documentElement.setAttribute('data-theme', theme);
+    document.documentElement.style.colorScheme = theme;
+  })();
+</script>

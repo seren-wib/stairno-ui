@@ -1,0 +1,102 @@
+---
+import { localePath, type Locale } from '../lib/i18n';
+import LocaleSwitch from './LocaleSwitch.astro';
+import ThemeToggle, { type ThemeLabels } from './ThemeToggle.astro';
+
+export interface MenuItem {
+  href: string;
+  label: string;
+  /** Extra attributes for the label span, e.g. the hub's dot-text data. */
+  labelAttrs?: Record<string, string>;
+}
+
+interface Props {
+  locale: Locale;
+  path?: string;
+  /** Brand name, "Stairno". Links to the locale home. */
+  brand: string;
+  /** Menu links. The scroll spy marks the one whose section fills the view. */
+  items?: MenuItem[];
+  /** Visible text of the locale switch, in the language it switches to. */
+  switchLabel: string;
+  themeLabels: ThemeLabels;
+}
+
+const { locale, path = '', brand, items = [], switchLabel, themeLabels } = Astro.props;
+---
+
+<header class="site-header" data-sticky>
+  <div class="container">
+    <a class="brand" href={localePath(locale)}>
+      {brand}
+    </a>
+    <nav class="site-nav">
+      {items.length > 0 && (
+        <ul class="site-menu" data-menu>
+          {items.map((item) => (
+            <li>
+              <a href={item.href}>
+                <span {...item.labelAttrs}>{item.label}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+      <slot name="actions" />
+      <LocaleSwitch locale={locale} path={path} label={switchLabel} />
+      <ThemeToggle labels={themeLabels} />
+    </nav>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-sticky]');
+  if (header) {
+    const update = () => header.classList.toggle('is-solid', window.scrollY > 24);
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+  }
+
+  // Scroll spy: the menu link whose section covers the most of the viewport
+  // (below the header) is current. Measured on scroll rather than through
+  // IntersectionObserver ratios, which favour short sections over tall ones.
+  // At the end of the page the last section is current so the menu can reach
+  // its final item.
+  const links = Array.from(
+    document.querySelectorAll<HTMLAnchorElement>('[data-menu] a[href^="#"]'),
+  );
+  const sections = links
+    .map((link) => document.querySelector<HTMLElement>(link.getAttribute('href') ?? ''))
+    .filter((section): section is HTMLElement => section !== null);
+  if (links.length > 0 && sections.length > 0) {
+    const headerHeight = header?.offsetHeight ?? 0;
+    let frame = 0;
+    const atEnd = () =>
+      window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+    const setCurrent = () => {
+      frame = 0;
+      let best: Element | null = null;
+      let bestCover = 0;
+      for (const section of sections) {
+        const rect = section.getBoundingClientRect();
+        const cover = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, headerHeight);
+        if (cover > bestCover) {
+          best = section;
+          bestCover = cover;
+        }
+      }
+      if (atEnd()) best = sections[sections.length - 1] ?? best;
+      for (const link of links) {
+        const current = best !== null && link.getAttribute('href') === `#${best.id}`;
+        if (current) link.setAttribute('aria-current', 'true');
+        else link.removeAttribute('aria-current');
+      }
+    };
+    const schedule = () => {
+      if (frame === 0) frame = requestAnimationFrame(setCurrent);
+    };
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    setCurrent();
+  }
+</script>

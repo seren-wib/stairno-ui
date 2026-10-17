@@ -1,0 +1,59 @@
+---
+import { type Locale } from '../lib/i18n';
+import LocaleSwitch from './LocaleSwitch.astro';
+
+export interface FooterLink {
+  href: string;
+  label: string;
+}
+
+interface Props {
+  locale: Locale;
+  path?: string;
+  /** Brand name, "Stairno". */
+  brand: string;
+  /** One quiet line under the brand, the etymology on the hub. */
+  tagline?: string;
+  /** Middle column: a heading and the links under it, opened in the same tab. */
+  links: { heading: string; items: FooterLink[] };
+  /** Right column: the repository link. */
+  source: FooterLink;
+  /** Visible text of the locale switch, in the language it switches to. */
+  switchLabel: string;
+  /** Copyright year; defaults to the build year. */
+  year?: number;
+}
+
+const {
+  locale,
+  path = '',
+  brand,
+  tagline,
+  links,
+  source,
+  switchLabel,
+  year = new Date().getFullYear(),
+} = Astro.props;
+---
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand" data-reveal="1">
+      <span class="brand">{brand}</span>
+      {tagline && <span class="footer-etymology">{tagline}</span>}
+      <span class="footer-copy">
+        © {year} {brand}
+      </span>
+    </div>
+    <nav class="footer-links" aria-label={links.heading} data-reveal="2">
+      <span class="footer-heading">{links.heading}</span>
+      {links.items.map((item) => (
+        <a href={item.href}>{item.label}</a>
+      ))}
+    </nav>
+    <div class="footer-links" data-reveal="3">
+      <a href={source.href}>{source.label}</a>
+      <LocaleSwitch locale={locale} path={path} label={switchLabel} />
+    </div>
+  </div>
+</footer>
