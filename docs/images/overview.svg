@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 300" width="860" height="300" role="img" aria-label="stairno-ui ships tokens.css, base.css, Header, Footer, ThemeToggle, LocaleSwitch, ThemeInit, Fonts and the theme and i18n helpers; stairno.com, stairnolabs.com, stairnoworks.com and stairnogames.com install it from a git tag and build on it with Astro">
+  <defs>
+    <style>
+      text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#57606a"/>
+    </marker>
+  </defs>
+  <rect x="0.5" y="0.5" width="859" height="299" rx="16" fill="#f6f8fa" stroke="#d0d7de"/>
+
+  <rect x="32" y="40" width="300" height="220" rx="12" fill="#ffffff" stroke="#d0d7de"/>
+  <text x="182" y="70" text-anchor="middle" font-size="16" font-weight="700" fill="#24292f">@stairno/ui</text>
+  <text x="182" y="90" text-anchor="middle" font-size="12" fill="#57606a">seren-wib/stairno-ui, installed from a git tag</text>
+
+  <rect x="48" y="106" width="128" height="64" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="112" y="128" text-anchor="middle" font-size="12" font-weight="600" fill="#24292f">styles</text>
+  <text x="112" y="146" text-anchor="middle" font-size="11" fill="#57606a">tokens.css</text>
+  <text x="112" y="161" text-anchor="middle" font-size="11" fill="#57606a">base.css</text>
+
+  <rect x="188" y="106" width="128" height="64" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="252" y="128" text-anchor="middle" font-size="12" font-weight="600" fill="#24292f">lib</text>
+  <text x="252" y="146" text-anchor="middle" font-size="11" fill="#57606a">theme.ts</text>
+  <text x="252" y="161" text-anchor="middle" font-size="11" fill="#57606a">i18n.ts</text>
+
+  <rect x="48" y="182" width="268" height="62" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="182" y="204" text-anchor="middle" font-size="12" font-weight="600" fill="#24292f">components</text>
+  <text x="182" y="222" text-anchor="middle" font-size="11" fill="#57606a">Header · Footer · ThemeToggle · LocaleSwitch</text>
+  <text x="182" y="237" text-anchor="middle" font-size="11" fill="#57606a">ThemeInit · Fonts</text>
+
+  <line x1="332" y1="150" x2="420" y2="150" stroke="#57606a" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="376" y="138" text-anchor="middle" font-size="11" fill="#57606a">astro build</text>
+
+  <rect x="430" y="40" width="398" height="220" rx="12" fill="#ffffff" stroke="#d0d7de"/>
+  <text x="629" y="70" text-anchor="middle" font-size="16" font-weight="700" fill="#24292f">Stairno sites</text>
+  <text x="629" y="90" text-anchor="middle" font-size="12" fill="#57606a">one look, each site adds only its own sections</text>
+
+  <rect x="446" y="106" width="178" height="60" rx="8" fill="#111111"/>
+  <text x="535" y="131" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">stairno.com</text>
+  <text x="535" y="150" text-anchor="middle" font-size="11" fill="#d0d7de">hub · live</text>
+
+  <rect x="634" y="106" width="178" height="60" rx="8" fill="#f6f8fa" stroke="#d0d7de" stroke-dasharray="4 3"/>
+  <text x="723" y="131" text-anchor="middle" font-size="13" font-weight="700" fill="#57606a">stairnolabs.com</text>
+  <text x="723" y="150" text-anchor="middle" font-size="11" fill="#8c959f">next</text>
+
+  <rect x="446" y="180" width="178" height="60" rx="8" fill="#f6f8fa" stroke="#d0d7de" stroke-dasharray="4 3"/>
+  <text x="535" y="205" text-anchor="middle" font-size="13" font-weight="700" fill="#57606a">stairnoworks.com</text>
+  <text x="535" y="224" text-anchor="middle" font-size="11" fill="#8c959f">planned</text>
+
+  <rect x="634" y="180" width="178" height="60" rx="8" fill="#f6f8fa" stroke="#d0d7de" stroke-dasharray="4 3"/>
+  <text x="723" y="205" text-anchor="middle" font-size="13" font-weight="700" fill="#57606a">stairnogames.com</text>
+  <text x="723" y="224" text-anchor="middle" font-size="11" fill="#8c959f">planned</text>
+
+  <text x="430" y="284" text-anchor="middle" font-size="11" fill="#8c959f">solid: on the package today · dashed: will start on it</text>
+</svg>

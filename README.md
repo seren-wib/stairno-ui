@@ -1,0 +1,269 @@
+# stairno-ui
+
+[**Quickstart**](#quickstart) | [**How it works**](#how-it-works) | [**Configuration**](#configuration) | [**Examples**](#examples) | [**FAQ**](#faq)
+
+**stairno-ui** is the shared design package (`@stairno/ui`) for **every Stairno site**, so that **stairno.com, Labs, Works and Games look like one brand** without copying a stylesheet four times. It ships **design tokens, a base stylesheet and six Astro components** (header, footer, theme toggle, locale switch, theme script, fonts) as plain source, **installed from a git tag**, with no build step and no npm publish. Node 22 or newer, Astro 7 as a peer dependency, nothing else.
+
+![GitHub Repo stars](https://img.shields.io/github/stars/seren-wib/stairno-ui?style=social)
+[![ci](https://github.com/seren-wib/stairno-ui/actions/workflows/ci.yml/badge.svg)](https://github.com/seren-wib/stairno-ui/actions/workflows/ci.yml)
+[![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](CHANGELOG.md)
+[![Node](https://img.shields.io/badge/node-%E2%89%A522-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![Astro](https://img.shields.io/badge/Astro-7-BC52EE?logo=astro&logoColor=white)](https://astro.build/)
+
+[![Korean and English](https://img.shields.io/badge/i18n-ko%20%7C%20en-4285F4.svg)](#how-it-works)
+[![Light and dark](https://img.shields.io/badge/theme-light%20%7C%20dark-111318.svg)](#how-it-works)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+
+## Updates
+
+- [2026/10/18] **v0.1.0, first release.** Tokens, base stylesheet, `Header`, `Footer`, `ThemeToggle`, `LocaleSwitch`, `ThemeInit`, `Fonts`, theme and locale helpers, 43 tests. Extracted from stairno.com with a pixel-identical build. [Changelog](CHANGELOG.md)
+
+## Star History
+
+<a href="https://star-history.com/#seren-wib/stairno-ui&Date">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=seren-wib/stairno-ui&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=seren-wib/stairno-ui&type=Date" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=seren-wib/stairno-ui&type=Date" />
+  </picture>
+</a>
+
+## Table of Contents
+
+- [Why](#why)
+- [Quickstart](#quickstart)
+- [How it works](#how-it-works)
+- [What a site gets](#what-a-site-gets)
+- [Configuration](#configuration)
+- [Examples](#examples)
+- [Commands](#commands)
+- [FAQ](#faq)
+- [Contribution](#contribution)
+
+## Why
+
+Stairno runs four sites on four domains, each in its own repository. Without a shared package:
+
+- The second site starts by copying `tokens.css`, the header and the footer from the first, and the copies drift the week after.
+- A brand decision (one font, one monochrome palette, one header) has to be applied four times and checked four times.
+- The theme script and the locale rules get rewritten per site, so a stored theme or a `/ko/` path behaves a little differently on each.
+
+stairno-ui keeps all of that in one place:
+
+- **One source for the look.** Colours, type, spacing, header, footer, toggle and switch live here. A site adds only its own sections.
+- **Props in, markup out.** Components know no copy, no links and no project list. Every string comes from the site's own dictionaries.
+- **Pinned, not floating.** Sites install a tag (`#v0.1.0`). A change here reaches a site only when that site bumps the tag in its own pull request.
+- **Tested like the sites.** Unit tests for the helpers and stylesheets, Container API tests for every component, CI on each pull request.
+
+## Quickstart
+
+### Requirements
+
+- **Node 22.22 or newer** and **npm** on your `PATH`
+- git, and an Astro 7 project to use it from
+
+### 1. Add the dependency
+
+```bash
+npm install github:seren-wib/stairno-ui#v0.1.0
+```
+
+> [!IMPORTANT]
+> Always pin a tag. `github:seren-wib/stairno-ui` without `#vX.Y.Z` installs whatever `main` is today, and `npm ci` will then fail to reproduce the lockfile on the next machine.
+
+### 2. Use it in the layout
+
+```astro
+---
+import Fonts from '@stairno/ui/components/Fonts.astro';
+import ThemeInit from '@stairno/ui/components/ThemeInit.astro';
+import '@stairno/ui/base.css';
+import '../styles/site.css';
+---
+
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <ThemeInit />
+    <title>Stairno Labs</title>
+    <Fonts />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
+```
+
+`base.css` comes first so the site stylesheet can build on the tokens. `ThemeInit` goes before the title so the page never flashes the wrong theme.
+
+### 3. Check it works
+
+Inside this repository:
+
+```bash
+npm ci && npm test
+```
+
+<p align="center">
+  <img src="docs/images/tests.svg" alt="npm test output: 8 test files and 43 tests passing" width="820">
+</p>
+
+## How it works
+
+<p align="center">
+  <img src="docs/images/overview.svg" alt="The package ships tokens.css, base.css, the components and the theme and i18n helpers; each Stairno site installs it from a git tag and builds on it with Astro" width="860">
+</p>
+
+The package is source only. `package.json` maps a handful of export paths to `.css`, `.ts` and `.astro` files; the consuming Astro project compiles them like its own files, including the component `<script>` and `<style>` blocks. There is no `dist/`, so a change is one commit, one tag and one bump in the site.
+
+A few details:
+
+- **Tokens never change with the site, only with the theme.** `tokens.css` declares brand constants (the night palette, the star, Pretendard) once and the light and dark sets on `html[data-theme]`. No media query decides the theme; the script does, once, before paint.
+- **The inline theme script and `resolveTheme` are kept equal by a test.** The component test renders `ThemeInit`, runs the script with a fake `localStorage` and `matchMedia`, and compares the result with the TypeScript function for every case.
+- **`Header` carries the scroll spy and the solid-on-scroll behaviour.** Any menu link to a `#section` gets `aria-current` when that section fills the view. Sites without an in-page menu pass no items and get the bar, the switch and the toggle.
+- **A site can decorate the labels.** `labelAttrs` on a menu item are spread onto the label span, which is how stairno.com draws the current item in dots without the package knowing about dots.
+- **Shared classes, one owner.** `.site-header`, `.site-menu`, `.locale-switch`, `.site-footer`, `.footer-*`, `.container` and `.button` are styled here and nowhere else. A site that needs a different header is a brand decision, not a stylesheet override.
+
+## What a site gets
+
+<details>
+<summary><b>Export map</b></summary>
+
+| Import                                      | What it is                                                                                                                                                      |
+| ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@stairno/ui`                               | `resolveTheme`, `nextTheme`, `isTheme`, `THEME_KEY`, `locales`, `localePath`, `alternateLocale`, `isLocale`, `defaultLocale` and the `Theme` and `Locale` types |
+| `@stairno/ui/theme`                         | The theme helpers alone                                                                                                                                         |
+| `@stairno/ui/i18n`                          | The locale helpers alone                                                                                                                                        |
+| `@stairno/ui/tokens.css`                    | CSS variables only                                                                                                                                              |
+| `@stairno/ui/base.css`                      | Tokens plus reset, type, container, header, locale switch, footer, button                                                                                       |
+| `@stairno/ui/components/Header.astro`       | Fixed header: brand link, optional menu, `actions` slot, locale switch, theme toggle                                                                            |
+| `@stairno/ui/components/Footer.astro`       | Three columns: brand and tagline, a link list, source link and locale switch                                                                                    |
+| `@stairno/ui/components/ThemeToggle.astro`  | Sun and moon button that flips `data-theme` and stores the choice                                                                                               |
+| `@stairno/ui/components/LocaleSwitch.astro` | Link to the same path in the other locale                                                                                                                       |
+| `@stairno/ui/components/ThemeInit.astro`    | The inline `<script>` that applies the theme before paint                                                                                                       |
+| `@stairno/ui/components/Fonts.astro`        | Pretendard Variable preconnect and stylesheet links                                                                                                             |
+
+</details>
+
+<details>
+<summary><b>Rendered header (stairno.com, Korean)</b></summary>
+
+```html
+<header class="site-header" data-sticky>
+  <div class="container">
+    <a class="brand" href="/ko/">Stairno</a>
+    <nav class="site-nav">
+      <ul class="site-menu" data-menu>
+        <li><a href="#projects"><span data-dot-text …>프로젝트</span></a></li>
+        <li><a href="#news"><span data-dot-text …>소식</span></a></li>
+        <li><a href="#contact"><span data-dot-text …>연락</span></a></li>
+      </ul>
+      <a class="locale-switch" href="/en/" hreflang="en" lang="en" rel="alternate">English</a>
+      <button type="button" class="theme-toggle" data-theme-toggle aria-label="테마 전환" …>…</button>
+    </nav>
+  </div>
+</header>
+```
+
+</details>
+
+## Configuration
+
+Nothing is configured globally; every component takes props.
+
+- **`Header`**: `locale`, `path`, `brand`, `items` (`{ href, label, labelAttrs? }[]`, optional), `switchLabel`, `themeLabels` (`{ light, dark, toggle }`). Slot `actions` renders between the menu and the locale switch, for a sign-in link.
+- **`Footer`**: `locale`, `path`, `brand`, `tagline` (optional), `links` (`{ heading, items: { href, label }[] }`), `source` (`{ href, label }`), `switchLabel`, `year` (defaults to the build year).
+- **`ThemeToggle`**: `labels` (`{ light, dark, toggle }`). `light` and `dark` name what the next click does and become the `aria-label`.
+- **`LocaleSwitch`**: `locale` (the page's own), `path` (below the locale prefix), `label` (in the target language).
+- **`ThemeInit`, `Fonts`**: no props.
+- **`localStorage` key `theme`**: the only thing the package stores. Values are `light` or `dark`; anything else is ignored.
+
+## Examples
+
+<details>
+<summary><b>A site header with a sign-in link and no in-page menu</b></summary>
+
+```astro
+---
+import Header from '@stairno/ui/components/Header.astro';
+import { t, type Locale } from '../i18n';
+const { locale } = Astro.props as { locale: Locale };
+const copy = t(locale);
+---
+
+<Header
+  locale={locale}
+  brand="Stairno"
+  switchLabel={copy.nav.switchLocale}
+  themeLabels={copy.nav.theme}
+>
+  <a slot="actions" class="site-action" href={`/${locale}/sign-in/`}>{copy.nav.signIn}</a>
+</Header>
+```
+
+</details>
+
+<details>
+<summary><b>Bump a site to a new version</b></summary>
+
+In the site repository, on a feature branch:
+
+```bash
+npm install github:seren-wib/stairno-ui#v0.2.0
+```
+
+Commit `package.json` and `package-lock.json`, run the site's own tests, open a pull request. The screenshot comparison in that pull request is where a visual change gets noticed.
+
+</details>
+
+<details>
+<summary><b>Work on the package and a site at the same time</b></summary>
+
+Link the checkout instead of the tag while iterating:
+
+```bash
+npm install ../stairno-ui
+```
+
+Before committing the site, put the tag back with the first command above. A `file:` dependency never lands on `main`.
+
+</details>
+
+## Commands
+
+| Command                | What it does                                        |
+| ---------------------- | --------------------------------------------------- |
+| `npm test`             | Unit and component tests (Vitest, Astro Container)  |
+| `npm run test:watch`   | Same, in watch mode                                 |
+| `npm run check`        | `astro check`: TypeScript across `.ts` and `.astro` |
+| `npm run format`       | Prettier, write                                     |
+| `npm run format:check` | Prettier, check only (what CI runs)                 |
+
+## FAQ
+
+### 1. `npm ci` fails with `Missing: @stairno/ui@github:seren-wib/stairno-ui#v0.1.0 from lock file`
+
+The lockfile was written with a `file:` link or a different tag. Reinstall the pinned tag and commit the lockfile:
+
+```bash
+npm install github:seren-wib/stairno-ui#v0.1.0
+```
+
+### 2. `[WARN] Missing pages directory: src/pages` when running the tests
+
+Expected. The package has no pages; Astro's Vite plugin notes that and carries on. The Container API renders components without a pages directory.
+
+### 3. The header looks right but the theme toggle does nothing
+
+`ThemeToggle` is a button plus a component `<script>`. It only runs when the component is rendered by Astro inside a page, not when its HTML is copied into a static file. Also check that `ThemeInit` sits in `<head>`; the toggle reads `data-theme` from `<html>` first.
+
+### 4. My site overrides `.site-header` and the override stopped working
+
+Overrides are not supported on purpose; every Stairno site shares one header. Change it here, bump the version, and update the sites.
+
+## Contribution
+
+Bug reports about a component rendering differently on one site than another, about the theme script, or about a token that drifts between light and dark are welcome, as are fixes with a failing test first. Branch, commit, merge and release rules are in [CONTRIBUTING.md](CONTRIBUTING.md).
+
+If one shared header saves you from fixing four, a ⭐ helps other people find it.
