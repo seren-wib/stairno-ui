@@ -146,7 +146,7 @@ const themeLabels = { light: 'Switch to light', dark: 'Switch to dark', toggle: 
 </style>
 ```
 
-Pages live under a locale prefix (`/en/`, `/ko/`): the brand links to the locale home and the switch links to the same path in the other locale. The header is fixed and transparent over a night-coloured top section, so the first section of every page sits on `var(--night)` and leaves room for `--header-height`.
+Pages live under a locale prefix (`/en/`, `/ko/`): the brand links to the locale home (or to `brandHref`, which the account center sets to the hub) and the switch links to the same path in the other locale. The header is fixed and transparent over a night-coloured top section, so the first section of every page sits on `var(--night)` and leaves room for `--header-height`.
 
 ### 4. Build the site
 

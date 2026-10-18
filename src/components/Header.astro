@@ -13,8 +13,10 @@ export interface MenuItem {
 interface Props {
   locale: Locale;
   path?: string;
-  /** Brand name, "Stairno". Links to the locale home. */
+  /** Brand name, "Stairno". Links to the locale home unless `brandHref` says otherwise. */
   brand: string;
+  /** Where the brand goes when the site's home is elsewhere (the account center: the hub). */
+  brandHref?: string;
   /** Menu links. The scroll spy marks the one whose section fills the view. */
   items?: MenuItem[];
   /** Visible text of the locale switch, in the language it switches to. */
@@ -22,12 +24,20 @@ interface Props {
   themeLabels: ThemeLabels;
 }
 
-const { locale, path = '', brand, items = [], switchLabel, themeLabels } = Astro.props;
+const {
+  locale,
+  path = '',
+  brand,
+  brandHref = localePath(locale),
+  items = [],
+  switchLabel,
+  themeLabels,
+} = Astro.props;
 ---
 
 <header class="site-header" data-sticky>
   <div class="container">
-    <a class="brand" href={localePath(locale)}>
+    <a class="brand" href={brandHref}>
       {brand}
     </a>
     <nav class="site-nav">
