@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.2] - 2026-10-18
+
+### Added
+
+- `Header` takes an optional `brandHref`. Without it the brand still links to the locale home. The account center sets it to the hub home, `https://stairno.com/{locale}/` (account.stairno.com SRS DR-7).
+
 ## [0.2.1] - 2026-10-18
 
 ### Fixed
@@ -26,6 +32,7 @@ All notable changes to this project are documented here. The format follows [Kee
 - `theme` helpers (`resolveTheme`, `nextTheme`, `isTheme`, `THEME_KEY`) and `i18n` path helpers (`locales`, `localePath`, `alternateLocale`, `isLocale`).
 - Vitest suites for the helpers, the stylesheets and every component; GitHub Actions CI.
 
+[0.2.2]: https://github.com/seren-wib/stairno-ui/releases/tag/v0.2.2
 [0.2.1]: https://github.com/seren-wib/stairno-ui/releases/tag/v0.2.1
 [0.2.0]: https://github.com/seren-wib/stairno-ui/releases/tag/v0.2.0
 [0.1.0]: https://github.com/seren-wib/stairno-ui/releases/tag/v0.1.0
