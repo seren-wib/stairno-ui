@@ -6,7 +6,7 @@
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/seren-wib/stairno-ui?style=social)
 [![ci](https://github.com/seren-wib/stairno-ui/actions/workflows/ci.yml/badge.svg)](https://github.com/seren-wib/stairno-ui/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-0.2.0-blue.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.2.1-blue.svg)](CHANGELOG.md)
 [![Node](https://img.shields.io/badge/node-%E2%89%A522-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 [![Astro](https://img.shields.io/badge/Astro-7-BC52EE?logo=astro&logoColor=white)](https://astro.build/)
 
@@ -16,6 +16,7 @@
 
 ## Updates
 
+- [2026/10/18] **v0.2.1, footer on short pages.** The body is now at least one viewport tall and the footer sits at the bottom of the screen on pages shorter than it, instead of leaving a band of page background underneath. Tall pages are unchanged. [Changelog](CHANGELOG.md)
 - [2026/10/18] **v0.2.0, account menu.** `AccountMenu`: the round account button and profile card that the hub, the account center and every project site put in the header. Server-known user or a session read in the browser, keyboard and reduced-motion support, 89 tests. [Changelog](CHANGELOG.md)
 - [2026/10/18] **v0.1.0, first release.** Tokens, base stylesheet, `Header`, `Footer`, `ThemeToggle`, `LocaleSwitch`, `ThemeInit`, `Fonts`, theme and locale helpers, 43 tests. Extracted from stairno.com with a pixel-identical build. [Changelog](CHANGELOG.md)
 
@@ -53,7 +54,7 @@ stairno-ui keeps all of that in one place:
 
 - **One source for the look.** Colours, type, spacing, header, footer, toggle and switch live here. A site adds only its own sections.
 - **Props in, markup out.** Components know no copy, no links and no project list. Every string comes from the site's own dictionaries.
-- **Pinned, not floating.** Sites install a tag (`#v0.2.0`). A change here reaches a site only when that site bumps the tag in its own pull request.
+- **Pinned, not floating.** Sites install a tag (`#v0.2.1`). A change here reaches a site only when that site bumps the tag in its own pull request.
 - **Tested like the sites.** Unit tests for the helpers and stylesheets, Container API tests for every component, CI on each pull request.
 
 ## Quickstart
@@ -70,7 +71,7 @@ Steps 1 to 4 use the package in a site. Step 5 is for working on the package its
 In the site repository:
 
 ```bash
-npm install github:seren-wib/stairno-ui#v0.2.0
+npm install github:seren-wib/stairno-ui#v0.2.1
 ```
 
 > [!IMPORTANT]
@@ -165,7 +166,7 @@ npm test
 ```
 
 <p align="center">
-  <img src="docs/images/tests.svg" alt="npm test output: 11 test files and 89 tests passing" width="820">
+  <img src="docs/images/tests.svg" alt="npm test output: 11 test files and 90 tests passing" width="820">
 </p>
 
 ## How it works
@@ -326,7 +327,7 @@ With no server to ask, the page renders signed out and the browser reads the ses
 In the site repository, on a feature branch:
 
 ```bash
-npm install github:seren-wib/stairno-ui#v0.2.0
+npm install github:seren-wib/stairno-ui#v0.2.1
 ```
 
 Commit `package.json` and `package-lock.json`, run the site's own tests, open a pull request. The screenshot comparison in that pull request is where a visual change gets noticed.
@@ -358,12 +359,12 @@ Before committing the site, put the tag back with the first command above. A `fi
 
 ## FAQ
 
-### 1. `npm ci` fails with `Missing: @stairno/ui@github:seren-wib/stairno-ui#v0.2.0 from lock file`
+### 1. `npm ci` fails with `Missing: @stairno/ui@github:seren-wib/stairno-ui#v0.2.1 from lock file`
 
 The lockfile was written with a `file:` link or a different tag. Reinstall the pinned tag and commit the lockfile:
 
 ```bash
-npm install github:seren-wib/stairno-ui#v0.2.0
+npm install github:seren-wib/stairno-ui#v0.2.1
 ```
 
 ### 2. `[WARN] Missing pages directory: src/pages` when running the tests
