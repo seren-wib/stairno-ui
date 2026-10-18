@@ -32,6 +32,11 @@ describe('Header', () => {
     expect(brand?.text.trim()).toBe('Stairno');
   });
 
+  it('links the brand where brandHref says, for a site whose home is elsewhere', async () => {
+    const root = await render(Header, { ...props, brandHref: 'https://stairno.com/ko/' });
+    expect(root.querySelector('a.brand')?.getAttribute('href')).toBe('https://stairno.com/ko/');
+  });
+
   it('renders the menu items in order and starts with nothing current', async () => {
     const root = await render(Header, props);
     const links = root.querySelectorAll('ul.site-menu[data-menu] a');
