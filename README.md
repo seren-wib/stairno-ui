@@ -2,11 +2,11 @@
 
 [**Quickstart**](#quickstart) | [**How it works**](#how-it-works) | [**Configuration**](#configuration) | [**Examples**](#examples) | [**FAQ**](#faq)
 
-**stairno-ui** is the shared design package (`@stairno/ui`) for **every Stairno site**, so that **stairno.com, Labs, Works and Games look like one brand** without copying a stylesheet four times. It ships **design tokens, a base stylesheet and six Astro components** (header, footer, theme toggle, locale switch, theme script, fonts) as plain source, **installed from a git tag**, with no build step and no npm publish. Node 22 or newer, Astro 7 as a peer dependency, nothing else.
+**stairno-ui** is the shared design package (`@stairno/ui`) for **every Stairno site**, so that **stairno.com, Labs, Works and Games look like one brand** without copying a stylesheet four times. It ships **design tokens, a base stylesheet and seven Astro components** (header, account menu, footer, theme toggle, locale switch, theme script, fonts) as plain source, **installed from a git tag**, with no build step and no npm publish. Node 22 or newer, Astro 7 as a peer dependency, nothing else.
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/seren-wib/stairno-ui?style=social)
 [![ci](https://github.com/seren-wib/stairno-ui/actions/workflows/ci.yml/badge.svg)](https://github.com/seren-wib/stairno-ui/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.2.0-blue.svg)](CHANGELOG.md)
 [![Node](https://img.shields.io/badge/node-%E2%89%A522-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 [![Astro](https://img.shields.io/badge/Astro-7-BC52EE?logo=astro&logoColor=white)](https://astro.build/)
 
@@ -16,6 +16,7 @@
 
 ## Updates
 
+- [2026/10/18] **v0.2.0, account menu.** `AccountMenu`: the round account button and profile card that the hub, the account center and every project site put in the header. Server-known user or a session read in the browser, keyboard and reduced-motion support, 89 tests. [Changelog](CHANGELOG.md)
 - [2026/10/18] **v0.1.0, first release.** Tokens, base stylesheet, `Header`, `Footer`, `ThemeToggle`, `LocaleSwitch`, `ThemeInit`, `Fonts`, theme and locale helpers, 43 tests. Extracted from stairno.com with a pixel-identical build. [Changelog](CHANGELOG.md)
 
 ## Star History
@@ -52,7 +53,7 @@ stairno-ui keeps all of that in one place:
 
 - **One source for the look.** Colours, type, spacing, header, footer, toggle and switch live here. A site adds only its own sections.
 - **Props in, markup out.** Components know no copy, no links and no project list. Every string comes from the site's own dictionaries.
-- **Pinned, not floating.** Sites install a tag (`#v0.1.0`). A change here reaches a site only when that site bumps the tag in its own pull request.
+- **Pinned, not floating.** Sites install a tag (`#v0.2.0`). A change here reaches a site only when that site bumps the tag in its own pull request.
 - **Tested like the sites.** Unit tests for the helpers and stylesheets, Container API tests for every component, CI on each pull request.
 
 ## Quickstart
@@ -69,7 +70,7 @@ Steps 1 to 4 use the package in a site. Step 5 is for working on the package its
 In the site repository:
 
 ```bash
-npm install github:seren-wib/stairno-ui#v0.1.0
+npm install github:seren-wib/stairno-ui#v0.2.0
 ```
 
 > [!IMPORTANT]
@@ -164,7 +165,7 @@ npm test
 ```
 
 <p align="center">
-  <img src="docs/images/tests.svg" alt="npm test output: 8 test files and 43 tests passing" width="820">
+  <img src="docs/images/tests.svg" alt="npm test output: 11 test files and 89 tests passing" width="820">
 </p>
 
 ## How it works
@@ -180,6 +181,7 @@ A few details:
 - **Tokens never change with the site, only with the theme.** `tokens.css` declares brand constants (the night palette, the star, Pretendard) once and the light and dark sets on `html[data-theme]`. No media query decides the theme; the script does, once, before paint.
 - **The inline theme script and `resolveTheme` are kept equal by a test.** The component test renders `ThemeInit`, runs the script with a fake `localStorage` and `matchMedia`, and compares the result with the TypeScript function for every case.
 - **`Header` carries the scroll spy and the solid-on-scroll behaviour.** Any menu link to a `#section` gets `aria-current` when that section fills the view. Sites without an in-page menu pass no items and get the bar, the switch and the toggle.
+- **The account menu is one component for three kinds of page.** A server that knows the user passes `user`; the hub, which has no server, passes `sessionUrl` and the browser asks the account API, staying signed out if the answer fails or takes more than 3 seconds. Either way the markup, the card and the keyboard behaviour are the same.
 - **A site can decorate the labels.** `labelAttrs` on a menu item are spread onto the label span, which is how stairno.com draws the current item in dots without the package knowing about dots.
 - **Shared classes, one owner.** `.site-header`, `.site-menu`, `.locale-switch`, `.site-footer`, `.footer-*`, `.container` and `.button` are styled here and nowhere else. A site that needs a different header is a brand decision, not a stylesheet override.
 
@@ -196,6 +198,7 @@ A few details:
 | `@stairno/ui/tokens.css`                    | CSS variables only                                                                                                                                              |
 | `@stairno/ui/base.css`                      | Tokens plus reset, type, container, header, locale switch, footer, button                                                                                       |
 | `@stairno/ui/components/Header.astro`       | Fixed header: brand link, optional menu, `actions` slot, locale switch, theme toggle                                                                            |
+| `@stairno/ui/components/AccountMenu.astro`  | Round account button for the header `actions` slot, with a profile card (account link, log out) or log in and sign up links                                     |
 | `@stairno/ui/components/Footer.astro`       | Three columns: brand and tagline, a link list, source link and locale switch                                                                                    |
 | `@stairno/ui/components/ThemeToggle.astro`  | Sun and moon button that flips `data-theme` and stores the choice                                                                                               |
 | `@stairno/ui/components/LocaleSwitch.astro` | Link to the same path in the other locale                                                                                                                       |
@@ -238,7 +241,8 @@ A few details:
 
 Nothing is configured globally; every component takes props.
 
-- **`Header`**: `locale`, `path`, `brand`, `items` (`{ href, label, labelAttrs? }[]`, optional), `switchLabel`, `themeLabels` (`{ light, dark, toggle }`). Slot `actions` renders between the menu and the locale switch, for a sign-in link.
+- **`Header`**: `locale`, `path`, `brand`, `items` (`{ href, label, labelAttrs? }[]`, optional), `switchLabel`, `themeLabels` (`{ light, dark, toggle }`). Slot `actions` renders between the menu and the locale switch, for the account menu.
+- **`AccountMenu`**: `locale`, `labels` (`{ signedIn, signedOut, manage, signOut, signIn, signUp }`), `accountUrl` (account center overview), `signInUrl`, `signUpUrl`, `signOutUrl`, then one of `user` (`{ name, email }`, when the server knows who is signed in) or `sessionUrl` (read in the browser with credentials; expects the Better Auth get-session body `{ user: { name, email } }` or `null`), and `id` (card id, optional, generated by default). `signedIn` and `signedOut` are the button's `aria-label` in each state; the rest are visible text. Log out POSTs `{}` to `signOutUrl` with credentials and reloads the page.
 - **`Footer`**: `locale`, `path`, `brand`, `tagline` (optional), `links` (`{ heading, items: { href, label }[] }`), `source` (`{ href, label }`), `switchLabel`, `year` (defaults to the build year).
 - **`ThemeToggle`**: `labels` (`{ light, dark, toggle }`). `light` and `dark` name what the next click does and become the `aria-label`.
 - **`LocaleSwitch`**: `locale` (the page's own), `path` (below the locale prefix), `label` (in the target language).
@@ -248,14 +252,18 @@ Nothing is configured globally; every component takes props.
 ## Examples
 
 <details>
-<summary><b>A site header with a sign-in link and no in-page menu</b></summary>
+<summary><b>A site header with the account menu, user known on the server</b></summary>
+
+The account center and the project sites know the user from their own session and pass it in. `null` renders the signed-out card.
 
 ```astro
 ---
+import AccountMenu from '@stairno/ui/components/AccountMenu.astro';
 import Header from '@stairno/ui/components/Header.astro';
 import { t, type Locale } from '../i18n';
 const { locale } = Astro.props as { locale: Locale };
 const copy = t(locale);
+const user = Astro.locals.user; // { name, email } or null
 ---
 
 <Header
@@ -264,10 +272,50 @@ const copy = t(locale);
   switchLabel={copy.nav.switchLocale}
   themeLabels={copy.nav.theme}
 >
-  <a slot="actions" class="site-action" href={`/${locale}/sign-in/`}>
-    {copy.nav.signIn}
-  </a>
+  <AccountMenu
+    slot="actions"
+    locale={locale}
+    labels={copy.nav.account}
+    user={user}
+    accountUrl={`https://account.stairno.com/${locale}/`}
+    signInUrl={`/${locale}/sign-in/`}
+    signUpUrl={`https://account.stairno.com/${locale}/sign-up`}
+    signOutUrl="/auth/sign-out"
+  />
 </Header>
+```
+
+`copy.nav.account` is the site's own dictionary entry, for example in English:
+
+```ts
+{
+  signedIn: 'Account menu',
+  signedOut: 'Log in or sign up',
+  manage: 'Manage account',
+  signOut: 'Log out',
+  signIn: 'Log in',
+  signUp: 'Sign up',
+}
+```
+
+</details>
+
+<details>
+<summary><b>The account menu on a static page (the hub)</b></summary>
+
+With no server to ask, the page renders signed out and the browser reads the session. The account API has to allow the page's origin with credentials on both URLs, and the page's CSP needs the API in `connect-src`.
+
+```astro
+<AccountMenu
+  slot="actions"
+  locale="en"
+  labels={labels}
+  sessionUrl="https://api.stairno.com/auth/get-session"
+  signOutUrl="https://api.stairno.com/auth/sign-out"
+  accountUrl="https://account.stairno.com/en/"
+  signInUrl="https://account.stairno.com/en/sign-in?redirect=https://stairno.com/en/"
+  signUpUrl="https://account.stairno.com/en/sign-up"
+/>
 ```
 
 </details>
@@ -310,12 +358,12 @@ Before committing the site, put the tag back with the first command above. A `fi
 
 ## FAQ
 
-### 1. `npm ci` fails with `Missing: @stairno/ui@github:seren-wib/stairno-ui#v0.1.0 from lock file`
+### 1. `npm ci` fails with `Missing: @stairno/ui@github:seren-wib/stairno-ui#v0.2.0 from lock file`
 
 The lockfile was written with a `file:` link or a different tag. Reinstall the pinned tag and commit the lockfile:
 
 ```bash
-npm install github:seren-wib/stairno-ui#v0.1.0
+npm install github:seren-wib/stairno-ui#v0.2.0
 ```
 
 ### 2. `[WARN] Missing pages directory: src/pages` when running the tests
