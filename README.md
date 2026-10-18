@@ -57,36 +57,43 @@ stairno-ui keeps all of that in one place:
 
 ## Quickstart
 
+Steps 1 to 4 use the package in a site. Step 5 is for working on the package itself.
+
 ### Requirements
 
 - **Node 22.22 or newer** and **npm** on your `PATH`
-- git, and an Astro 7 project to use it from
+- git, and an Astro 7 project to use it from. For a blank one: `npm create astro@latest -- --template minimal`
 
 ### 1. Add the dependency
+
+In the site repository:
 
 ```bash
 npm install github:seren-wib/stairno-ui#v0.1.0
 ```
 
 > [!IMPORTANT]
-> Always pin a tag. `github:seren-wib/stairno-ui` without `#vX.Y.Z` installs whatever `main` is today, and `npm ci` will then fail to reproduce the lockfile on the next machine.
+> Always pin a tag. `github:seren-wib/stairno-ui` without `#vX.Y.Z` installs whatever `main` is at install time, so two sites end up on different code and a later `npm install` changes the look without anyone bumping a version.
 
-### 2. Use it in the layout
+### 2. Put the head pieces in a layout
+
+`src/layouts/Base.astro`:
 
 ```astro
 ---
 import Fonts from '@stairno/ui/components/Fonts.astro';
 import ThemeInit from '@stairno/ui/components/ThemeInit.astro';
 import '@stairno/ui/base.css';
-import '../styles/site.css';
+
+const { title } = Astro.props;
 ---
 
-<html lang="ko">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <ThemeInit />
-    <title>Stairno Labs</title>
+    <title>{title}</title>
     <Fonts />
   </head>
   <body>
@@ -95,14 +102,65 @@ import '../styles/site.css';
 </html>
 ```
 
-`base.css` comes first so the site stylesheet can build on the tokens. `ThemeInit` goes before the title so the page never flashes the wrong theme.
+`ThemeInit` goes before the title so the page never flashes the wrong theme. If the site has its own stylesheet, import it after `base.css` so it can build on the tokens.
 
-### 3. Check it works
+### 3. Add the header and footer to a page
 
-Inside this repository:
+`src/pages/en/index.astro`:
+
+```astro
+---
+import Header from '@stairno/ui/components/Header.astro';
+import Footer from '@stairno/ui/components/Footer.astro';
+import Base from '../../layouts/Base.astro';
+
+const themeLabels = { light: 'Switch to light', dark: 'Switch to dark', toggle: 'Toggle theme' };
+---
+
+<Base title="Stairno Labs">
+  <Header locale="en" brand="Stairno" switchLabel="한국어" themeLabels={themeLabels} />
+  <main>
+    <section class="hero">
+      <div class="container">
+        <h1>Stairno Labs</h1>
+      </div>
+    </section>
+  </main>
+  <Footer
+    locale="en"
+    brand="Stairno"
+    links={{ heading: 'Projects', items: [{ href: 'https://stairno.com/en/', label: 'Hub' }] }}
+    source={{ href: 'https://github.com/seren-wib/stairno-ui', label: 'Source' }}
+    switchLabel="한국어"
+  />
+</Base>
+
+<style>
+  .hero {
+    background: var(--night);
+    color: var(--on-night);
+    padding: calc(var(--header-height) + 4rem) 0 4rem;
+  }
+</style>
+```
+
+Pages live under a locale prefix (`/en/`, `/ko/`): the brand links to the locale home and the switch links to the same path in the other locale. The header is fixed and transparent over a night-coloured top section, so the first section of every page sits on `var(--night)` and leaves room for `--header-height`.
+
+### 4. Build the site
 
 ```bash
-npm ci && npm test
+npm run build
+```
+
+Astro compiles the package's `.astro`, `.ts` and `.css` files like the site's own. `dist/en/index.html` now has the header with the theme toggle, the footer, and links to `/ko/`; `npm run preview` serves it.
+
+### 5. Work on the package
+
+```bash
+git clone https://github.com/seren-wib/stairno-ui.git
+cd stairno-ui
+npm ci
+npm test
 ```
 
 <p align="center">
@@ -271,6 +329,18 @@ Expected. The package has no pages; Astro's Vite plugin notes that and carries o
 ### 4. My site overrides `.site-header` and the override stopped working
 
 Overrides are not supported on purpose; every Stairno site shares one header. Change it here, bump the version, and update the sites.
+
+### 5. The header text is invisible and the first heading hides under it
+
+The header is fixed, transparent and white-on-night until the page scrolls past 24px, so on a page that starts with a white section it disappears and covers the top of the content. Start every page with a section on the night background and leave room for the header, as in [step 3](#3-add-the-header-and-footer-to-a-page):
+
+```css
+.hero {
+  background: var(--night);
+  color: var(--on-night);
+  padding: calc(var(--header-height) + 4rem) 0 4rem;
+}
+```
 
 ## Contribution
 
