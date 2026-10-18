@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.1] - 2026-10-18
+
+### Fixed
+
+- Short pages no longer end with a band of page background under the footer. `body` is a column flex box at least `100vh` (`100dvh` where supported) tall, and `.site-footer` takes the leftover space with `margin-top: auto` and does not shrink. `main` keeps its own height, so a grid `main` does not stretch its rows; pages taller than the viewport lay out exactly as before.
+
 ## [0.2.0] - 2026-10-18
 
 ### Added
@@ -20,5 +26,6 @@ All notable changes to this project are documented here. The format follows [Kee
 - `theme` helpers (`resolveTheme`, `nextTheme`, `isTheme`, `THEME_KEY`) and `i18n` path helpers (`locales`, `localePath`, `alternateLocale`, `isLocale`).
 - Vitest suites for the helpers, the stylesheets and every component; GitHub Actions CI.
 
+[0.2.1]: https://github.com/seren-wib/stairno-ui/releases/tag/v0.2.1
 [0.2.0]: https://github.com/seren-wib/stairno-ui/releases/tag/v0.2.0
 [0.1.0]: https://github.com/seren-wib/stairno-ui/releases/tag/v0.1.0
