@@ -51,6 +51,21 @@ describe('base.css', () => {
     }
   });
 
+  it('keeps the footer at the bottom of the viewport on short pages', () => {
+    const block = (selector: string) => base.split(`\n${selector} {`)[1]?.split('}')[0] ?? '';
+    const body = block('body');
+    expect(body).toContain('display: flex;');
+    expect(body).toContain('flex-direction: column;');
+    // 100vh first as the fallback, 100dvh after it so browsers that know it use it.
+    expect(body).toMatch(/min-height: 100vh;\s*min-height: 100dvh;/);
+    // The footer takes the leftover space above itself. Growing main instead would stretch a
+    // grid main's rows (the hub's 404 page moves its second section down).
+    const footer = block('.site-footer');
+    expect(footer).toContain('margin-top: auto;');
+    expect(footer).toContain('flex-shrink: 0;');
+    expect(base).not.toMatch(/(^|\n)body > main\s*\{/);
+  });
+
   it('turns its transitions off under reduced motion', () => {
     const reduced = base.split('@media (prefers-reduced-motion: reduce)')[1] ?? '';
     expect(reduced).toContain('.site-header');
